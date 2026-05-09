@@ -295,8 +295,6 @@ async def fayl_tasdiqlash_callback(update: Update, context: ContextTypes.DEFAULT
 def main():
     init_db()
     app = ApplicationBuilder().token(TOKEN).build()
-
-    # ConversationHandler — savol/javob qo'shish
     conv = ConversationHandler(
         entry_points=[CallbackQueryHandler(admin_callback, pattern="^adm_add$")],
         states={
@@ -305,17 +303,14 @@ def main():
         },
         fallbacks=[CommandHandler("bekor", bekor)],
     )
-
-    # Handlerlar tartibi muhim!
     app.add_handler(CommandHandler("start", start))
     app.add_handler(CommandHandler("admin", admin))
-    app.add_handler(conv)
-    app.add_handler(CallbackQueryHandler(admin_callback,         pattern="^adm_"))
     app.add_handler(CallbackQueryHandler(fayl_tasdiqlash_callback, pattern="^fayl_"))
-    app.add_handler(CallbackQueryHandler(faq_javob,              pattern="^faq_"))
-    app.add_handler(CallbackQueryHandler(back_start,             pattern="^back_start$"))
+    app.add_handler(CallbackQueryHandler(faq_javob,                 pattern="^faq_"))
+    app.add_handler(CallbackQueryHandler(back_start,                pattern="^back_start$"))
+    app.add_handler(CallbackQueryHandler(admin_callback,            pattern="^(adm_|del_)"))
+    app.add_handler(conv)
     app.add_handler(MessageHandler(filters.Document.ALL, fayl_qabul))
-
     logger.info("Bot ishga tushdi ✅")
     app.run_polling(drop_pending_updates=True)
 
